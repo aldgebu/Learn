@@ -1,1 +1,1 @@
-console.log("HELLO World")
+console.log('Gvesveleba rame?');
