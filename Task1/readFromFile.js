@@ -7,9 +7,10 @@ const read = (filename, callback) => {
     readStream.on('error', () => {console.log(error)});
     readStream.on('data', (chunk) => {
         data += chunk;
-    })
-
-    callback(data);
+    });
+    readStream.on('end', () => {
+        callback(data);
+    });
 }
 
 const ans = read('input.txt', (data) => {
