@@ -10,7 +10,7 @@ class load{
     }
 
     end(){
-        this.progress.end();
+        this.progress.stop();
     }
 };
 

@@ -17,7 +17,7 @@ const read = () => {
     })
 
     readStream.on('end', () => {
-        progress.stop();
+        progress.end();
     })
 }
 
