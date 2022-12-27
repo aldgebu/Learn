@@ -1,20 +1,17 @@
 const cliProgress = require('cli-progress');
-const load = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+class load{
+    constructor(all, now) {
+        this.progress = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+        this.progress.start(all, now);
+    };
 
-const start = (all, cur) => {
-    load.start(all, cur);
+    update(curval){
+        this.progress.update(curval);
+    }
+
+    end(){
+        this.progress.end();
+    }
 };
 
-const update = (newValue) => {
-    load.update(newValue);
-}
-
-const stop = () => {
-    load.stop();
-}
-
-module.exports = {
-    start : start,
-    update: update,
-    stop: stop
-}
+module.exports = load;
