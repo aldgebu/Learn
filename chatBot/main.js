@@ -1,22 +1,22 @@
 const telegramBot = require('node-telegram-bot-api');
+const botService = require('./logic.js');
+
 require('dotenv').config();
 const TOKEN = process.env.TOKEN;
 const Bot = new telegramBot(TOKEN, {polling : true});
-
-const bot = require('./logic.js');
-const telegrambot = new bot();
+const BotService = new botService();
 
 Bot.onText(/^\/about/, (message) => {
-    let chat_id = message.from.id;
-    Bot.sendMessage(chat_id, telegrambot.about());
+    const chatId = message.from.id;
+    Bot.sendMessage(chatId, BotService.about());
 })
 
 Bot.onText(/^\/link/, (message) => {
-    let chat_id = message.from.id;
-    Bot.sendMessage(chat_id, telegrambot.link());
+    const chatId = message.from.id;
+    Bot.sendMessage(chatId, BotService.link());
 })
 
 Bot.onText(/^\/help/, (message) => {
-    let chat_id = message.from.id;
-    Bot.sendMessage(chat_id, telegrambot.help());
+    const chatId = message.from.id;
+    Bot.sendMessage(chatId, BotService.help());
 })
