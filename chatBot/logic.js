@@ -1,7 +1,7 @@
 const telegramBot = require('node-telegram-bot-api');
 require('dotenv').config();
 
-class bot{
+class botService{
     help(){
         const ans = 'I have three commands for this time, :// \n' +
             '1) help, witch you used right now. \n' +
@@ -24,4 +24,4 @@ class bot{
     }
 }
 
-module.exports = bot;
+module.exports = botService;
