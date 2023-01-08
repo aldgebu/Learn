@@ -7,7 +7,6 @@ const Bot = new telegramBot(TOKEN, {polling : true});
 const botService = new Botservice();
 
 Bot.on('location', (location) => {
-    console.log(1);
     const chatId = location.from.id;
     Bot.sendMessage(chatId, botService.location(location));
 })
@@ -25,4 +24,10 @@ Bot.onText(/^\/link/, (message) => {
 Bot.onText(/^\/help/, (message) => {
     const chatId = message.from.id;
     Bot.sendMessage(chatId, botService.help());
+})
+
+Bot.onText(/^\/love/, (message) => {
+    console.log(message);
+    const chatId = message.from.id;
+    Bot.sendMessage(chatId, botService.love());
 })
