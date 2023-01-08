@@ -8,7 +8,13 @@ const botService = new Botservice();
 
 Bot.on('location', (location) => {
     const chatId = location.from.id;
-    Bot.sendMessage(chatId, botService.location(location));
+    const result = botService.location(location);
+    result.then(response => {
+        Bot.sendMessage(chatId, response.data.current.condition.text);
+    })
+        .catch(err => {
+            Bot.sendMessage(chatId, 'Not available right now ://');
+        })
 })
 
 Bot.onText(/^\/about/, (message) => {

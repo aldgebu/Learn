@@ -2,18 +2,14 @@ const telegramBot = require('node-telegram-bot-api');
 const axios = require('axios');
 require('dotenv').config();
 
-const apiKey = '18efe63006755828aa09429de28601dc';
+const apiKey = '30dba739831940bab3481229230801';
 class BotService{
-    location(location){
+    async location(location){
         const lat = location.location.latitude;
         const lon = location.location.longitude;
-        const url = 'https://api.openweathermap.org/data/3.0/onecall?lat=' + lat + '&lon=' + lon + '&exclude=hourly' + '&appid=' + apiKey;
-        axios.get(url)
-        .then((response) => {
-            console.log(response);
-        }).catch(err => {
-                console.log(err);
-        })
+        const url = 'http://api.weatherapi.com/v1/current.json?key=' + apiKey + '&q=' + lat + ',' + lon + '&aqi=no';
+        const promise = await axios.get(url);
+        return promise;
     }
     help(){
         const ans = 'I have three commands for this time, :// \n' +
