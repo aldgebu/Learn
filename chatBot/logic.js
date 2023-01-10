@@ -1,15 +1,15 @@
 const telegramBot = require('node-telegram-bot-api');
 const axios = require('axios');
-require('dotenv').config();
+const Weather = require('./weatherservice');
 
-const apiKey = '30dba739831940bab3481229230801';
+const weatherService = new Weather;
+
 class BotService{
     async location(location){
         const lat = location.location.latitude;
         const lon = location.location.longitude;
-        const url = 'http://api.weatherapi.com/v1/current.json?key=' + apiKey + '&q=' + lat + ',' + lon + '&aqi=no';
-        const promise = await axios.get(url);
-        return promise;
+        const ans = weatherService.getweather(lat, lon);
+        return ans;
     }
     help(){
         const ans = 'I have three commands for this time, :// \n' +

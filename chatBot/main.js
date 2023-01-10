@@ -12,9 +12,6 @@ Bot.on('location', (location) => {
     result.then(response => {
         Bot.sendMessage(chatId, response.data.current.condition.text);
     })
-        .catch(err => {
-            Bot.sendMessage(chatId, 'Not available right now ://');
-        })
 })
 
 Bot.onText(/^\/about/, (message) => {
