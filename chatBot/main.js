@@ -1,17 +1,35 @@
-const telegramBot = require('node-telegram-bot-api');
-const Botservice = require('./logic.js');
+const Botservice = require('./logic');
+const TimeChecker = require('./time-cheker');
+const UserRepository = require('./userRepository');
+const Cron = require('./cron');
+const BotFather = require('./botFather');
+// saxelebis shecvla +
+// repository pattern +
+// cron
 
-require('dotenv').config();
-const TOKEN = process.env.TOKEN;
-const Bot = new telegramBot(TOKEN, {polling : true});
+
+async function forBot(){
+    await BotFather.makeNewBot();
+    const Bot = BotFather.getBot();
+}
+
+forBot();
+
+const cron = new Cron;
+const userRepository = new UserRepository;
+const timeChecker = new TimeChecker;
 const botService = new Botservice();
 
-Bot.on('location', (location) => {
+cron.startTimer();
+Bot.on('location', async (location) => {
     const chatId = location.from.id;
-    const result = botService.location(location);
-    result.then(response => {
-        Bot.sendMessage(chatId, response.data.current.condition.text);
-    })
+    const userHaveTime = userRepository.haveTime(chatId);
+    const {lat, lon} = location.location;
+    if(userHaveTime){
+        userRepository.updateUserLocation(chatId, lat, lon);
+    }else {
+        Bot.sendMessage(chatId, "bebiashenis trakma, jer dro chaagde she nabozaro");
+    }
 })
 
 Bot.onText(/^\/about/, (message) => {
@@ -30,7 +48,14 @@ Bot.onText(/^\/help/, (message) => {
 })
 
 Bot.onText(/^\/love/, (message) => {
-    console.log(message);
     const chatId = message.from.id;
     Bot.sendMessage(chatId, botService.love());
+});
+
+Bot.on('message', (message) => {
+    const chatId = message.chat.id;
+    const userMessage = message.text;
+    if(timeChecker.isTime(userMessage)){
+        userRepository.updateUserTime(chatId, userMessage);
+    }else Bot.sendMessage(chatId, "Waiting for valid time");
 })

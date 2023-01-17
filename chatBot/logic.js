@@ -1,16 +1,9 @@
-const telegramBot = require('node-telegram-bot-api');
 const axios = require('axios');
 const Weather = require('./weatherservice');
 
 const weatherService = new Weather;
 
 class BotService{
-    async location(location){
-        const lat = location.location.latitude;
-        const lon = location.location.longitude;
-        const ans = weatherService.getweather(lat, lon);
-        return ans;
-    }
     help(){
         const ans = 'I have three commands for this time, :// \n' +
             '1) help, witch you used right now. \n' +
