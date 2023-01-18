@@ -1,32 +1,29 @@
 const cron = require('node-cron');
 const UserRepository = require('./userRepository');
-
+const CurrentTime = require('./currentTime');
+const WeatherService = require('./weatherservice');
+const Bot = require('./botFather');
 const userRepository = new UserRepository();
-class Cron{
-    currentTimeCounter(){
-        let date = new Date();
-        let hours = date.getHours();
-        let minutes = date.getMinutes();
+const currentTime = new CurrentTime;
+const weatherService = new WeatherService;
 
-        let currentTime;
-        if (hours < 10)
-            currentTime = '0' + hours;
-        else
-            currentTime = hours;
-        currentTime += ':';
-
-        if(minutes < 10)
-            currentTime += '0' + minutes;
-        else
-            currentTime += minutes;
-
-        return currentTime;
+class Cron {
+    constructor() {
+        this.bot = Bot.getBot()
     }
-    startTimer(){
-        const inEveryMinute = cron.schedule('*/1 * * * *', () => {
-            console.log('New minute started');
-            let currentTime = this.currentTimeCounter();
-            userRepository.checkTime(currentTime);
+
+    startTimer() {
+        cron.schedule('*/1 * * * *', async () => {
+            let realTime = currentTime.getTime();
+            let listOfUser = await userRepository.getByTimeWhoHaveLocation(realTime);
+            const weather = await Promise.all(listOfUser.map((user) => {
+                return weatherService.getWeather(user.lat, user.lon)
+            }))
+            const sendMessagePromises = []
+            listOfUser.map((user, index) => {
+                sendMessagePromises.push(this.bot.sendMessage(user.chat_id, weather[index].current.condition.text))
+            })
+            await Promise.all(sendMessagePromises)
         });
     }
 }

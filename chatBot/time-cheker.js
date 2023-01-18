@@ -7,7 +7,6 @@ class timeCheker{
                 if (firstTwo <= 23 && secondTwo <= 59){
                     return true;
                 }
-                //do nothing shechemisa
             }
         }
         return false;

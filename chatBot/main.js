@@ -7,13 +7,9 @@ const BotFather = require('./botFather');
 // repository pattern +
 // cron
 
+BotFather.makeNewBot();
+const Bot = BotFather.getBot();
 
-async function forBot(){
-    await BotFather.makeNewBot();
-    const Bot = BotFather.getBot();
-}
-
-forBot();
 
 const cron = new Cron;
 const userRepository = new UserRepository;
@@ -23,13 +19,9 @@ const botService = new Botservice();
 cron.startTimer();
 Bot.on('location', async (location) => {
     const chatId = location.from.id;
-    const userHaveTime = userRepository.haveTime(chatId);
-    const {lat, lon} = location.location;
-    if(userHaveTime){
-        userRepository.updateUserLocation(chatId, lat, lon);
-    }else {
-        Bot.sendMessage(chatId, "bebiashenis trakma, jer dro chaagde she nabozaro");
-    }
+    console.log(location)
+    await userRepository.updateUserLocation(chatId,location.location.latitude,location.location.longitude)
+    Bot.sendMessage(chatId, 'danqe');
 })
 
 Bot.onText(/^\/about/, (message) => {
@@ -52,10 +44,14 @@ Bot.onText(/^\/love/, (message) => {
     Bot.sendMessage(chatId, botService.love());
 });
 
-Bot.on('message', (message) => {
+Bot.on('message', async (message) => {
     const chatId = message.chat.id;
+    if (message.location)return;
     const userMessage = message.text;
-    if(timeChecker.isTime(userMessage)){
-        userRepository.updateUserTime(chatId, userMessage);
+    const messageIsTime = timeChecker.isTime(userMessage);
+    if(messageIsTime){
+        const haveUser = await userRepository.getByChatId(chatId);
+        if (haveUser)await userRepository.updateUserTime(chatId, userMessage);
+        else userRepository.save(chatId, userMessage);
     }else Bot.sendMessage(chatId, "Waiting for valid time");
 })

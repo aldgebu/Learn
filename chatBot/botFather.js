@@ -2,7 +2,7 @@ const telegramBot = require('node-telegram-bot-api');
 
 class botFather{
     static bot = null;
-    static async makeNewBot(){
+    static makeNewBot(){
         const token = process.env.TOKEN;
         botFather.bot = new telegramBot(token, {polling : true});
     }

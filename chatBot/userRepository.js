@@ -1,11 +1,7 @@
 const mongoose = require('mongoose');
 const Blog = require('./blog.js');
-const BotFather = require('./botFather');
 
 const dbURI = process.env.dbURI;
-
-const Bot = BotFather.getBot();
-
 mongoose.set('strictQuery', true);
 mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true})
     .then((result) => {
@@ -14,27 +10,24 @@ mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true})
 });
 
 class userRepository{
-    updateUserLocation(chatId, lat, lon){
-        Blog.updateOne({chat_id:chatId}, {
+    async updateUserLocation(chatId, lat, lon){
+        console.log(chatId)
+        console.log(lat)
+        console.log(lon)
+        const x=await Blog.findOneAndUpdate({chat_id:chatId}, {
             haveLatLon: true,
             lat:lat,
             lon:lon
         })
+        console.log(x)
     }
-    updateUserTime(chatId, newTime){
-        const haveUser = this.haveUser(chatId);
-        if(haveUser){
-            this.updateTime(chatId, newTime);
-        }else this.getNewUser(chatId, newTime);
-    }
-
-    updateTime(chatId, newTime){
-        Blog.updateOne({chat_id:chatId}, {
+    async updateUserTime(chatId, newTime){
+        await Blog.findOneAndUpdate({chat_id:chatId}, {
             timeOfUser: newTime
         })
     }
 
-    getNewUser(chatId, newTime){
+    save(chatId, newTime){
         const blog = new Blog({
             chat_id: chatId,
             haveLatLon: false,
@@ -43,17 +36,13 @@ class userRepository{
         });
         blog.save();
     }
-    haveUser(chatId){
-        //Have to Check when I have time property
-        Blog.find({chat_id:chatId}, (error, data) => {
-            return true;
-        })
+    async getByChatId(chatId){
+        return Blog.findOne({chat_id:chatId});
     }
 
-    checkTime(currentTime){
-        Blog.find({timeOfUser:currentTime}, (error, data) => {
-            Bot.sendMessage(data.chat_id,)
-        })
+
+    async getByTimeWhoHaveLocation(realTime){
+        return Blog.find({timeOfUser:realTime,haveLatLon:true});
     }
 }
 
