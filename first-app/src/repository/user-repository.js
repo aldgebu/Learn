@@ -1,8 +1,8 @@
-const User = require('../models/user');
+const User = require('../models/user.js');
 
 class UserRepository{
     getByEmail(email){
-        return user.findOne({email:email});
+        return User.findOne({email: email});
     }
     addUser(userInfo){
         const newUser = User({
@@ -11,6 +11,7 @@ class UserRepository{
             email: userInfo.email,
             password: userInfo.password
         });
+        newUser.save();
     }
 }
 
