@@ -2,12 +2,13 @@ const UserRepository = require('../repository/user-repository');
 
 const userRepository = new UserRepository();
 class Service{
-    userWithEmail(email){
-        userRepository.getByEmail(email);
+    async userWithEmail(email){
+        const user = await userRepository.getByEmail(email);
+        return user;
     }
 
-    addUser(userInfo){
-        userRepository.addUser(userInfo);
+    async addUser(userInfo){
+        await userRepository.addUser(userInfo);
     }
 }
 
