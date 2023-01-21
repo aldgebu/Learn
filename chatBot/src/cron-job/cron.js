@@ -1,6 +1,6 @@
 const cron = require('node-cron');
 const UserRepository = require('./userRepository');
-const CurrentTime = require('./currentTime');
+const CurrentTime = require('./service/currentTime');
 const WeatherService = require('./weatherservice');
 const Bot = require('./botFather');
 const userRepository = new UserRepository();
