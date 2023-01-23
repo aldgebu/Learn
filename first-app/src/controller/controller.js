@@ -1,15 +1,19 @@
-const Service = require('../service/service');
-
-const service = new Service;
+const UserService = require('../service/user-service');
 class Controller{
-    async registration(userInfo){
-        const user = service.userWithEmail(userInfo.email);
-        if (user)
-            return false;
-        else {
-            await service.addUser(userInfo);
-            // vifiqre ar yofiliyo asyncronuli mara mere ro davfiqrdi sanam es chawers uceb motxovna ro movides tu ari daregistrirebulio da davacdevin;
-            return true;
+    constructor (){
+        this.userService = new UserService();
+    }
+    async registration(req, res){
+        try{
+            const body = req.body;
+            await this.userService.register(body);
+            res.status(200).send({
+                description: 'OK'
+            });
+        }catch (err){
+            res.status(err.status).send({
+                description: err.description
+            })
         }
     }
 }

@@ -1,18 +1,19 @@
 const User = require('../models/user.js');
 
 class UserRepository{
-    getByEmail(email){
-        return User.findOne({email: email});
+    getByEmail(email) {
+        return User.findOne({ email: email });
     }
-    addUser(userInfo){
+    add(user){
         const newUser = User({
-            firstname: userInfo.firstname,
-            lastname: userInfo.lastname,
-            email: userInfo.email,
-            password: userInfo.password
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email,
+            password: user.password
         });
         newUser.save();
     }
 }
 
 module.exports = UserRepository;
+

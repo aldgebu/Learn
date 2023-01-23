@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
+const HashService = require('../service/hash-service');
 const Schema = mongoose.Schema;
+
+const hashService = new HashService();
 
 const userSchema = new Schema({
     firstname:{
@@ -18,7 +21,18 @@ const userSchema = new Schema({
         type: String,
         required: true
     }
+
 });
 
+userSchema.pre('save', async function (next){
+    try{
+        const hashedPassword = await hashService.getHash(this.password);
+        this.password = hashedPassword;
+        next();
+    }catch (error){
+        next(error);
+    }
+})
+
 const user = mongoose.model('user', userSchema);
-module.exports = userSchema;
+module.exports = user;
