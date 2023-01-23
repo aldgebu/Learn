@@ -3,6 +3,7 @@ const { DuplicateEmailException } = require('../exceptions/duplicate-email.excep
 const { IncorrectEmailException } = require('../exceptions/incorrect-email.exception');
 const validator = require('validator');
 
+const userRepository = new UserRepository();
 class UserService {
     constructor(){
         this.userRepository = new UserRepository();
@@ -13,7 +14,7 @@ class UserService {
         if (user){
             throw new DuplicateEmailException();
         }else {
-            const isValid = validator.(newUser.email);
+            const isValid = validator.isEmail(newUser.email);
             if(!isValid)
                 throw new IncorrectEmailException();
             else
