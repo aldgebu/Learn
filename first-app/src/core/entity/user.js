@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const HashService = require('../service/hash-service');
+const HashProvider = require('../../infrastructure/providers/hash-provider');
 const Schema = mongoose.Schema;
 
-const hashService = new HashService();
+const hashProvider = new HashProvider();
 
 const userSchema = new Schema({
     firstname:{
@@ -26,7 +26,7 @@ const userSchema = new Schema({
 
 userSchema.pre('save', async function (next){
     try{
-        const hashedPassword = await hashService.getHash(this.password);
+        const hashedPassword = await hashProvider.getHash(this.password);
         this.password = hashedPassword;
         next();
     }catch (error){

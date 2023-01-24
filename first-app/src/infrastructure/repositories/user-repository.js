@@ -1,4 +1,4 @@
-const User = require('../models/user.js');
+const User = require('../../core/entity/user.js');
 
 class UserRepository{
     getByEmail(email) {
@@ -12,6 +12,14 @@ class UserRepository{
             password: user.password
         });
         newUser.save();
+    }
+
+    async userWithProperty(property){
+        return User.findOne(property);
+    }
+
+    async updateInfo(filter, update){
+        return User.findOneAndUpdate(filter, update);
     }
 }
 

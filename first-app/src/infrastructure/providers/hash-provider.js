@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 
-class HashService{
+class HashProvider{
     async getHash(password){
         const salt = await bcrypt.genSalt(10);
         const  hashedPassword = await bcrypt.hash(password, salt);
@@ -11,4 +11,4 @@ class HashService{
     }
 }
 
-module.exports = HashService;
+module.exports = HashProvider;
