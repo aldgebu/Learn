@@ -18,7 +18,7 @@ class UserRepository{
         return User.findOne(property);
     }
 
-    async updateInfo(filter, update){
+    async updateFields(filter, update){
         return User.findOneAndUpdate(filter, update);
     }
 }

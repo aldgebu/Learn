@@ -1,5 +1,5 @@
 const UserService = require('../../core/service/user-service');
-class Controller{
+class UserController{
     constructor (){
         this.userService = new UserService();
     }
@@ -33,7 +33,7 @@ class Controller{
         }
     }
 
-    async userWithProperty(req, res){
+    async getUserWithProperty(req, res){
         try {
             const property = req.query;
             const user = await this.userService.getUserWithProperty(property);
@@ -45,13 +45,13 @@ class Controller{
         }
     }
 
-    async updateUserInfo(req, res){
+    async updateUserFields(req, res){
         const user = req.user;
-        await this.userService.updateInfo(user, req.body.update);
+        await this.userService.updateFields(user, req.body.update);
         res.status(200).send({
             description:'OK'
         })
     }
 }
 
-module.exports = Controller;
+module.exports = UserController;

@@ -16,51 +16,43 @@ class UserService {
 
     async register(newUser){
         const user = await this.userRepository.getByEmail(newUser.email);
-        if (user){
+        if (user)
             throw new DuplicateEmailException();
-        }else {
-            await userRepository.add(newUser);
-        }
+        await userRepository.add(newUser);
     }
     async login(user){
         const email = user.email;
         const password = user.password;
         const expactedUser = await this.userRepository.getByEmail(email);
-        if (expactedUser){
-            // roca vheshav expactedUser ze ar generirdeba tokeni da userForToken ro gavaketeb mere kaia
-            const correctPassword = await this.hashProvider.compare(password, expactedUser.password);
-            if (correctPassword){
-                const userForToken = {
-                    firstname:expactedUser.firstname,
-                    lastname:expactedUser.lastname,
-                    email:expactedUser.email,
-                }
-                const token = await this.jwtProvider.generateToken(userForToken);
-                return token;
-            }else {
-                throw new WrongPasswordException();
-            }
-        }else {
-            throw new UserNotFoundException();
+        if (!expactedUser) throw new UserNotFoundException();
+
+        const correctPassword = await this.hashProvider.compare(password, expactedUser.password);
+
+        if(!correctPassword) throw new WrongPasswordException();
+
+        const userForToken = {
+            firstname:expactedUser.firstname,
+            lastname:expactedUser.lastname,
+            email:expactedUser.email,
         }
+        const token = await this.jwtProvider.generateToken(userForToken);
+        return token;
     }
 
     async getUserWithProperty(property){
         const user = await this.userRepository.userWithProperty(property);
-        if (user){
-            const parsedUser = {
-                firstname: user.firstname,
-                lastname: user.lastname,
-                email: user.email
-            }
-            return parsedUser;
-        }else {
-            throw new UserNotFoundException();
+        if (!user)throw new UserNotFoundException();
+
+        const parsedUser = {
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email
         }
+        return parsedUser;
     }
 
-    async updateInfo(filter, update){
-        await this.userRepository.updateInfo(filter, update);
+    async updateFields(filter, update){
+        await this.userRepository.updateFields(filter, update);
     }
 }
 

@@ -10,15 +10,11 @@ class JwtProvider{
         return token;
     }
 
-    async compare(token, user){
-
+    async getUserWithToken(token){
         try{
             const encodedUser = await jwt.verify(token, this.secret);
-            if (encodedUser){
-                if(encodedUser.email !== user.email){
-                    throw new IncorrectOrNoTokenException();
-                }
-            }else throw new IncorrectOrNoTokenException();
+            if (!encodedUser) throw new IncorrectOrNoTokenException;
+            return encodedUser;
         }catch (error){
             throw new IncorrectOrNoTokenException();
         }
