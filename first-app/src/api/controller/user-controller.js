@@ -46,11 +46,28 @@ class UserController{
     }
 
     async updateUserFields(req, res){
-        const user = req.user;
-        await this.userService.updateFields(user, req.body.update);
+        const userEmail = req.user.email;
+        await this.userService.updateFields({email: userEmail}, req.body.update);
         res.status(200).send({
             description:'OK'
         })
+    }
+
+    async vote(req, res){
+        try{
+            const voterEmail = req.body.vote.voter;
+            const recipientEmail = req.body.vote.recipient;
+            const rate = req.body.vote.rate;
+            const lastTimeOfVote = req.user.voteTime;
+            await this.userService.vote(voterEmail, recipientEmail, rate, lastTimeOfVote);
+            res.status(200).send({
+                description:'OK'
+            })
+        }catch (error){
+            res.status(error.status).send({
+                description:error.description
+            })
+        }
     }
 }
 

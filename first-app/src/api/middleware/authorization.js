@@ -15,7 +15,8 @@ class authorization{
             const userWithEmail = await this.userRepository.userWithProperty({
                 email:email
             });
-            this.checkEquality(expectedUser, userWithEmail);
+            await this.checkEquality(expectedUser, userWithEmail);
+            req.user = userWithEmail;
             next();
         }catch (error){
             res.status(error.status).send({
@@ -24,7 +25,7 @@ class authorization{
         }
     }
 
-    checkEquality(expectedUser, userWithThisEmail){
+    async checkEquality(expectedUser, userWithThisEmail){
         if (expectedUser.email !== userWithThisEmail.email){
             throw new IncorrectOrNoTokenException();
         }

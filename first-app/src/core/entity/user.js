@@ -20,8 +20,15 @@ const userSchema = new Schema({
     password:{
         type: String,
         required: true
+    },
+    voteTime:{
+        type: Number,
+        required: true
+    },
+    rating:{
+        type: Number,
+        required: true
     }
-
 });
 
 userSchema.pre('save', async function (next){
